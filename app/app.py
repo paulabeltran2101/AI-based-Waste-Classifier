@@ -95,11 +95,9 @@ else:
 # Mostrar imagen en Streamlit
         stframe.image(frame, channels="BGR")
         # Actualizamos el estado del checkbox
-        camera_running = st.checkbox("Camera running", value=True, key="camera_run_checkbox")
-
-        # Stop button logic
-        if not st.checkbox("Camera running", value=True, key="run_cam"):
-            break
+# Actualizar el valor del checkbox fuera del bucle
+        camera_running = st.session_state.camera_run_checkbox
+        
 
     cap.release()
     st.warning("Camera stopped")
