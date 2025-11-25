@@ -66,38 +66,40 @@ else:
     PROCESS_EVERY_N_FRAMES = 5
     frame_count = 0
 
-    st.warning("Click the **Stop** button to close the camera.")
+    cap = cv2.VideoCapture(0)
 
-    run_camera = st.checkbox("Start camera")
-    if run_camera:
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
-            st.error("❌ Unable to access camera.")
-        else:
-            while True:
-                ret, frame = cap.read()
-                if not ret:
-                    st.error("Camera disconnected.")
-                    break
+    # Checkbox para controlar la cámara, con key único
+    camera_running = st.checkbox("Camera running", value=True, key="camera_run_checkbox")
 
-                frame_count += 1
+    st.info("Press Ctrl+C in terminal to stop the app")
 
-                # Procesar solo cada N frames
-                if frame_count % PROCESS_EVERY_N_FRAMES == 0:
-                    features = extract_features_from_image(frame, conv_base)
-                    pred_idx = svm_model.predict(features)[0]
-                    pred_class = CLASS_NAMES[pred_idx]
+        
+    while camera_running:
+        ret, frame = cap.read()
+        if not ret:
+            st.error("Cannot access camera.")
+            break
 
-                    # Dibujar sobre la imagen
-                    cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        frame_count += 1
 
-        # Mostrar imagen en Streamlit
-                stframe.image(frame, channels="BGR")
-                
-                # Stop button logic
-                if not st.checkbox("Camera running", value=True, key="run_cam"):
-                    break
+        # Procesar solo cada N frames
+        if frame_count % PROCESS_EVERY_N_FRAMES == 0:
+            features = extract_features_from_image(frame, conv_base)
+            pred_idx = svm_model.predict(features)[0]
+            pred_class = CLASS_NAMES[pred_idx]
 
-        cap.release()
-        cv2.destroyAllWindows()
+            # Dibujar sobre la imagen
+            cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+# Mostrar imagen en Streamlit
+        stframe.image(frame, channels="BGR")
+        # Actualizamos el estado del checkbox
+        camera_running = st.checkbox("Camera running", value=True, key="camera_run_checkbox")
+
+        # Stop button logic
+        if not st.checkbox("Camera running", value=True, key="run_cam"):
+            break
+
+    cap.release()
+    st.warning("Camera stopped")
