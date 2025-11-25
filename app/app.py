@@ -3,8 +3,8 @@ from PIL import Image
 import numpy as np
 import cv2
 
-from src.feature_extractor import load_conv_base, extract_features_from_image
-from src.load_model import load_model
+from utils.feature_extractor import load_conv_base, extract_features_from_image
+from utils.load_model import load_model
 
 st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
 
