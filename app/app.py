@@ -66,37 +66,48 @@ else:
     PROCESS_EVERY_N_FRAMES = 5
     frame_count = 0
 
-    cap = cv2.VideoCapture(0)
+    # Detectar cámaras conectadas (prueba los primeros 5 índices)
+    available_cameras = []
+    for i in range(5):
+        cap_test = cv2.VideoCapture(i)
+        if cap_test.read()[0]:
+            available_cameras.append(i)
+        cap_test.release()
 
-    # Checkbox para controlar la cámara, con key único
-    camera_running = st.checkbox("Camera running", value=True, key="camera_run_checkbox")
+    if not available_cameras:
+        st.error("No camera detected")
+    else:
+        cam_index = st.selectbox("Select camera device:", available_cameras, index=0)
 
-    st.info("Press Ctrl+C in terminal to stop the app")
+    # Checkbox para controlar la cámara
+        camera_running = st.checkbox("Camera running", value=True, key="camera_run_checkbox")
 
-        
-    while camera_running:
-        ret, frame = cap.read()
-        if not ret:
-            st.error("Cannot access camera.")
-            break
+        cap = cv2.VideoCapture(cam_index)
+        st.info("Press Ctrl+C in terminal to stop the app")
 
-        frame_count += 1
+   
+        while camera_running:
+            ret, frame = cap.read()
+            if not ret:
+                st.error("Cannot access camera.")
+                break
 
-        # Procesar solo cada N frames
-        if frame_count % PROCESS_EVERY_N_FRAMES == 0:
-            features = extract_features_from_image(frame, conv_base)
-            pred_idx = svm_model.predict(features)[0]
-            pred_class = CLASS_NAMES[pred_idx]
+            frame_count += 1
 
-            # Dibujar sobre la imagen
-            cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            # Procesar solo cada N frames
+            if frame_count % PROCESS_EVERY_N_FRAMES == 0:
+                features = extract_features_from_image(frame, conv_base)
+                pred_idx = svm_model.predict(features)[0]
+                pred_class = CLASS_NAMES[pred_idx]
 
-# Mostrar imagen en Streamlit
-        stframe.image(frame, channels="BGR")
-        # Actualizamos el estado del checkbox
-# Actualizar el valor del checkbox fuera del bucle
-        camera_running = st.session_state.camera_run_checkbox
+                # Dibujar sobre la imagen
+                cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+            # Mostrar imagen en Streamlit
+            stframe.image(frame, channels="BGR")
+            # Actualizar el valor del checkbox fuera del bucle
+            camera_running = st.session_state.camera_run_checkbox
         
 
     cap.release()
