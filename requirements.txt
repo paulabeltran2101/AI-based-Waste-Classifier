@@ -1,0 +1,14 @@
+joblib
+tensorflow-cpu
+keras
+matplotlib
+numpy
+seaborn
+opencv-python-headless
+pandas
+scikit-learn
+scikit-image
+plotly
+streamlit
+pillow
+tqdm
