@@ -2,6 +2,11 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import cv2
+import sys
+import os
+
+# añade la carpeta raíz al PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.feature_extractor import load_conv_base, extract_features_from_image
 from utils.load_model import load_model
