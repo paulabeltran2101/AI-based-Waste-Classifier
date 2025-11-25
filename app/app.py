@@ -55,37 +55,49 @@ if mode == "Upload Image":
         cv2.putText(img, f"Waste type: {pred_class}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-        st.image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), channels="RGB", caption=f"Predicted class: {pred_class}")
+        st.image(img, channels="BGR", caption=f"Predicted class: {pred_class}")
 
 # ======================================
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
     stframe = st.empty()
+
     PROCESS_EVERY_N_FRAMES = 5
     frame_count = 0
 
-    cap = cv2.VideoCapture(0)
+    st.warning("Click the **Stop** button to close the camera.")
 
-    st.info("Press Ctrl+C in terminal to stop the camera")
+    run_camera = st.checkbox("Start camera")
+    if run_camera:
+        cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            st.error("❌ Unable to access camera.")
+        else:
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    st.error("Camera disconnected.")
+                    break
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+                frame_count += 1
 
-        frame_count += 1
+                # Procesar solo cada N frames
+                if frame_count % PROCESS_EVERY_N_FRAMES == 0:
+                    features = extract_features_from_image(frame, conv_base)
+                    pred_idx = svm_model.predict(features)[0]
+                    pred_class = CLASS_NAMES[pred_idx]
 
-        # Procesar solo cada N frames
-        if frame_count % PROCESS_EVERY_N_FRAMES == 0:
-            img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            features = extract_features_from_image(img_rgb, conv_base)
-            pred_idx = svm_model.predict(features)[0]
-            pred_class = CLASS_NAMES[pred_idx]
-
-            # Dibujar sobre la imagen
-            cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    # Dibujar sobre la imagen
+                    cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         # Mostrar imagen en Streamlit
-        stframe.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
+                stframe.image(frame, channels="BGR")
+                
+                # Stop button logic
+                if not st.checkbox("Camera running", value=True, key="run_cam"):
+                    break
+
+        cap.release()
+        cv2.destroyAllWindows()
