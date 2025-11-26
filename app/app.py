@@ -108,11 +108,11 @@ else:
     with col2:
         # Placeholder para predicción de texto
         pred_placeholder = st.empty()
-        
-        if ctx and ctx.video_transformer:
-            pred_cls = ctx.video_transformer.wc.pred_class
-            if pred_cls:
-                pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls}**")
+        while True:
+            if ctx and ctx.video_transformer:
+                pred_cls = ctx.video_transformer.wc.pred_class
+                pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
             else:
-                pred_placeholder.markdown("Esperando predicción…")
+                pred_placeholder.markdown("Conectando…")
+            time.sleep(0.1)
             
