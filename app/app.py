@@ -72,23 +72,18 @@ else:
     class VideoTransformer(VideoTransformerBase):
 
         def __init__(self):
-            self.time_controller = time_control.FrameTimer()
-            self.wc = WebCamReader(is_web=True)
-            self.last_pred = False
+            #self.time_controller = time_control.FrameTimer()
+            self.wc = WebCamReader(camera_index=1)
+            self.pred_class = False
 
         def transform(self, frame):
             #Convertir frame
             img = frame.to_ndarray(format="bgr24")
+            processed = self.wc.update()
             
-            #Guardar frame en flujo compartido
-            update_frame(img)
-
-            #Procesar frame con el modelo
-            result = self.wc.update()
-            if result is not None:
-                _, pred = result
-                self.last_pred = pred
-            
+            if processed is not None:
+                self.pred_class = self.wc.pred_class
+                return processed
             return img
     
 
@@ -110,9 +105,9 @@ else:
         pred_placeholder = st.empty()
         while True:
             if ctx and ctx.video_transformer:
-                pred_cls = ctx.video_transformer.wc.pred_class
+                pred_cls = ctx.video_transformer.pred_class
                 pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
             else:
                 pred_placeholder.markdown("Conectando…")
-            time.sleep(0.1)
+           # time.sleep(0.1)
             
