@@ -85,19 +85,8 @@ else:
             
             if processed is not None:
                 processed = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
-                processed = processed.astype("uint8")
+                #processed = processed.astype("uint8")
 
-                if self.wc.pred_class:
-                    cv2.putText(
-                        processed,
-                        f"Pred: {self.wc.pred_class}",
-                        (20, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        1.5,
-                        (255, 0, 0),  # Azul en RGB
-                        3,
-                        cv2.LINE_AA
-                    )
                 return processed
             return img
     
