@@ -10,8 +10,12 @@ from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 # añade la carpeta raíz al PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+#From project
 from utils.feature_extractor import load_conv_base, extract_features_from_image
 from utils.load_model import load_model
+from utils.image_flow import get_frame_info, update_frame
+from utils.camera_control import WebCamReader
+from utils import time_control
 
 st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
 st.title("🔍 Live AI-based Waste Classifier ♻️")
@@ -68,61 +72,47 @@ else:
     class VideoTransformer(VideoTransformerBase):
 
         def __init__(self):
-            self.counter = 0
-            self.process_every = 5
-            self.pred_class = None
+            self.time_controller = time_control.FrameTimer()
+            self.wc = WebCamReader(is_web=True)
+            self.last_pred = False
 
         def transform(self, frame):
+            #Convertir frame
             img = frame.to_ndarray(format="bgr24")
+            
+            #Guardar frame en flujo compartido
+            update_frame(img)
 
-            self.counter += 1
-
-            if self.counter % self.process_every == 0:
-                resized = cv2.resize(img, (380, 380))
-                features = extract_features_from_image(resized, conv_base)
-                pred_idx = svm_model.predict(features)[0]
-                self.pred_class = CLASS_NAMES[pred_idx]
-
-                # Dibujar predicción sobre la imagen
-            if self.pred_class is not None:
-                cv2.putText(img, f"Predicted: {self.pred_class}", (10, 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)              
-
+            #Procesar frame con el modelo
+            result = self.wc.update()
+            if result is not None:
+                _, pred = result
+                self.last_pred = pred
+            
             return img
-
-    st.subheader("📷 Realtime Camera Prediction")
+    
     # Placeholder para predicción de texto
     pred_placeholder = st.empty()
 
-    # Forzar CSS para que el vídeo llene la columna izquierda
-    st.markdown(
-        """
-        <style>
-        video {
-            width: 100% !important;
-            height: auto !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    col1, col2 = st.columns([3, 1])  # columna izquierda más grande para vídeo
+    col1, col2 = st.columns([2, 1])  # columna izquierda más grande para vídeo
+    
     with col1:
-        webrtc_ctx = webrtc_streamer(
+        webrtc_streamer(
             key="waste-demo",
             video_transformer_factory=VideoTransformer,
-            media_stream_constraints={"video": {"width": 1280, "height": 720}, "audio": False},
+            media_stream_constraints={
+                "video": {
+                    "width": {'ideal':1280}, 
+                    "height": {'ideal':720},
+                    },
+                    "audio": False}
         )
     with col2:
-        if webrtc_ctx.video_transformer:
-            pred_class = webrtc_ctx.video_transformer.pred_class
-            if pred_class:
-                pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_class}**")
-            else:
-                pred_placeholder.markdown("### Predicción en tiempo real\nEsperando...")
-        else:
-            pred_placeholder.markdown("### Predicción en tiempo real\nEsperando cámara...")
+        while True:
+            if "waste-demo" in st.session_state:
+                transformer = st.session_state["waste-demo"]["video_transformer"]
+                if transformer and transformer.last_pred:
+                    pred_placeholder.markdown(
+                        f"### Predicción\n**{pred_class}**")
+            time.sleep(0.1)
         
-
-   
