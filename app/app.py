@@ -15,7 +15,7 @@ from utils.load_model import load_model
 st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
 
 st.title("🔍 Live AI-based Waste Classifier ♻️")
-st.write("Selecciona el modo de entrada y obtén la predicción en tiempo real.")
+st.write("Select an input mode and get real-time waste classification.")
 
 # -------------------------------
 # Load models
@@ -43,6 +43,7 @@ mode = st.radio("Select mode:", ("Upload Image", "Realtime Camera"))
 # ======================================
 if mode == "Upload Image":
     uploaded_file = st.file_uploader("Select an image", type=["jpg", "jpeg", "png"])
+    
     if uploaded_file is not None:
         file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
         img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
@@ -62,62 +63,92 @@ if mode == "Upload Image":
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
-    stframe = st.empty()
+    # ------------------------------
+    # Session state initialization
+    # ------------------------------
+    if "camera_running" not in st.session_state:
+        st.session_state.camera_running = False
+
+    if "cap" not in st.session_state:
+        st.session_state.cap = None
+
+    if "frame_counter" not in st.session_state:
+        st.session_state.frame_counter = 0
 
     PROCESS_EVERY_N_FRAMES = 5
-    frame_count = 0
+    
+    # ------------------------------
+    # Camera discovery
+    # ------------------------------
+    st.subheader("📷 Realtime Camera Prediction")
 
-    # Detectar cámaras conectadas (prueba los primeros 5 índices)
     available_cameras = []
     for i in range(10):
-        cap_test = cv2.VideoCapture(i, cv2.CAP_DSHOW)
-        
-        if cap_test is not None and cap_test.isOpened():
-            ret, frame = cap_test.read()
+        cam = cv2.VideoCapture(i, cv2.CAP_DSHOW)
+        if cam is not None and cam.isOpened():
+            ret, _ = cam.read()
             if ret:
                 available_cameras.append(i)
-        # Liberar solo si está abierta
-        try:
-            cap_test.release()
-        except:
-            pass
-
+        cam.release()
+    
     if not available_cameras:
-        st.error("No camera detected")
-    else:
-        cam_index = st.selectbox("Select camera device:", available_cameras, index=0)
+        st.error("❌ No camera detected")
+        st.stop()
 
-    # Checkbox para controlar la cámara
-        camera_running = st.checkbox("Camera running", value=True, key="camera_run_checkbox")
+    cam_index = st.selectbox("Select camera device:", available_cameras)
 
-        cap = cv2.VideoCapture(cam_index)
-        st.info("Press Ctrl+C in terminal to stop the app")
+    col1, col2 = st.columns(2)
+    start_button = col1.button("▶️ Start camera")
+    stop_button = col2.button("⏹️ Stop camera")
+    
+    # ------------------------------
+    # START CAMERA
+    # ------------------------------
+    if start_button:
+        st.session_state.cap = cv2.VideoCapture(cam_index, cv2.CAP_DSHOW)
+        if not st.session_state.cap.isOpened():
+            st.error("❌ Could not open camera.")
+        else:
+            st.session_state.camera_running = True
 
-   
-        while camera_running:
-            ret, frame = cap.read()
-            if not ret:
-                st.error("Cannot access camera.")
-                break
+    # ------------------------------
+    # STOP CAMERA
+    # ------------------------------
+    if stop_button:
+        if st.session_state.cap is not None:
+            st.session_state.cap.release()
+        st.session_state.camera_running = False
+        st.session_state.cap = None
 
-            frame_count += 1
+    frame_area = st.empty()
 
-            # Procesar solo cada N frames
-            if frame_count % PROCESS_EVERY_N_FRAMES == 0:
-                frame_small = cv2.resize(frame, (380, 380))
-                features = extract_features_from_image(frame_small, conv_base)
+    # ------------------------------
+    # CAMERA LOOP (SAFE)
+    # ------------------------------
+    if st.session_state.camera_running and st.session_state.cap is not None:
+
+        ret, frame = st.session_state.cap.read()
+        if not ret:
+            st.error("❌ Cannot read from camera.")
+            st.session_state.camera_running = False
+        else:
+            st.session_state.frame_counter += 1
+
+            # Process every N frames
+            if st.session_state.frame_counter % PROCESS_EVERY_N_FRAMES == 0:
+                resized = cv2.resize(frame, (380, 380))
+                features = extract_features_from_image(resized, conv_base)
                 pred_idx = svm_model.predict(features)[0]
                 pred_class = CLASS_NAMES[pred_idx]
 
-                # Dibujar sobre la imagen
                 cv2.putText(frame, f"Predicted: {pred_class}", (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            # Mostrar imagen en Streamlit
-            stframe.image(frame, channels="BGR")
-            # Actualizar el valor del checkbox fuera del bucle
-            camera_running = st.session_state.camera_run_checkbox
-            time.sleep(0.01)
+            # Display frame
+            frame_area.image(frame, channels="BGR")
 
-    cap.release()
-    st.warning("Camera stopped")
+        # Small delay to improve smoothness
+        time.sleep(0.03)
+
+
+   
