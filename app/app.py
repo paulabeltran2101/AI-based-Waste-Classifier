@@ -91,28 +91,28 @@ else:
             
             return img
     
-    # Placeholder para predicción de texto
-    pred_placeholder = st.empty()
 
     col1, col2 = st.columns([2, 1])  # columna izquierda más grande para vídeo
     
     with col1:
-        webrtc_streamer(
+        ctx = webrtc_streamer(
             key="waste-demo",
             video_transformer_factory=VideoTransformer,
             media_stream_constraints={
                 "video": {
                     "width": {'ideal':1280}, 
-                    "height": {'ideal':720},
+                    "height": {'ideal':720}
                     },
                     "audio": False}
         )
     with col2:
-        while True:
-            if "waste-demo" in st.session_state:
-                transformer = st.session_state["waste-demo"]["video_transformer"]
-                if transformer and transformer.last_pred:
-                    pred_placeholder.markdown(
-                        f"### Predicción\n**{pred_class}**")
-            time.sleep(0.1)
+        # Placeholder para predicción de texto
+        pred_placeholder = st.empty()
         
+        if ctx and ctx.video_transformer:
+            pred_cls = ctx.video_transformer.wc.pred_class
+            if pred_cls:
+                pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls}**")
+            else:
+                pred_placeholder.markdown("Esperando predicción…")
+            
