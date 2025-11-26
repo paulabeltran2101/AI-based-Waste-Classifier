@@ -74,7 +74,7 @@ else:
         def __init__(self):
             #self.time_controller = time_control.FrameTimer()
             self.wc = WebCamReader(camera_index=1)
-            self.pred_class = False
+            self.pred_class = None
 
         def transform(self, frame):
             #Convertir frame
@@ -98,16 +98,17 @@ else:
                     "width": {'ideal':1280}, 
                     "height": {'ideal':720}
                     },
-                    "audio": False}
+                    "audio": False},
+            async_transform=True
         )
     with col2:
         # Placeholder para predicción de texto
         pred_placeholder = st.empty()
-        while True:
-            if ctx and ctx.video_transformer:
-                pred_cls = ctx.video_transformer.pred_class
-                pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
-            else:
-                pred_placeholder.markdown("Conectando…")
+        #while True:
+        if ctx and ctx.video_transformer:
+            pred_cls = ctx.video_transformer.pred_class
+            pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
+        else:
+            pred_placeholder.markdown("Conectando…")
            # time.sleep(0.1)
             
