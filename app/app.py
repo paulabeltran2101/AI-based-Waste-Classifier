@@ -74,15 +74,30 @@ else:
         def __init__(self):
             #self.time_controller = time_control.FrameTimer()
             self.wc = WebCamReader(camera_index=1)
-            self.pred_class = None
+            #self.pred_class = None
 
         def transform(self, frame):
             #Convertir frame
             img = frame.to_ndarray(format="bgr24")
+            
+            #Actualizamos frame y obtenemos predicción
             processed = self.wc.update()
             
             if processed is not None:
-                self.pred_class = self.wc.pred_class
+                processed = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
+                processed = processed.astype("uint8")
+
+                if self.wc.pred_class:
+                    cv2.putText(
+                        processed,
+                        f"Pred: {self.wc.pred_class}",
+                        (20, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1.5,
+                        (255, 0, 0),  # Azul en RGB
+                        3,
+                        cv2.LINE_AA
+                    )
                 return processed
             return img
     
