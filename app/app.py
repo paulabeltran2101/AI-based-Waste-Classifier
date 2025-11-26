@@ -102,6 +102,9 @@ else:
             async_transform=True
         )
     with col2:
+        # Placeholders dentro de la columna 2
+        pred_placeholder = st.empty()
+        
         # Placeholder para predicción de texto
         pred_placeholder = st.empty()
         #while True:

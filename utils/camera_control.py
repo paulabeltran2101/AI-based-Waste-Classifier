@@ -25,7 +25,7 @@ class WebCamReader():
             cv2.putText(img, f"Predicted: {self.pred_class}", (10, 40),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
 
-        return img
+        return img, self.pred_class
 
     def release(self):
         if self.cap:
