@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import sys
 import os
+import time
 
 # añade la carpeta raíz al PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
