@@ -63,13 +63,14 @@ if mode == "Upload Image":
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
-
+    
     #Definición clase 
     class VideoTransformer(VideoTransformerBase):
 
         def __init__(self):
             self.counter = 0
             self.process_every = 5
+            self.pred_class = None
 
         def transform(self, frame):
             img = frame.to_ndarray(format="bgr24")
@@ -80,28 +81,48 @@ else:
                 resized = cv2.resize(img, (380, 380))
                 features = extract_features_from_image(resized, conv_base)
                 pred_idx = svm_model.predict(features)[0]
-                pred_class = CLASS_NAMES[pred_idx]
+                self.pred_class = CLASS_NAMES[pred_idx]
 
-                #cv2.putText(img, f"Predicted: {pred_class}", (10, 30),
-                 #           cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-
-                # Guardar última predicción en session_state
-                st.session_state['last_pred'] = pred_class
+                # Dibujar predicción sobre la imagen
+            if self.pred_class is not None:
+                cv2.putText(img, f"Predicted: {self.pred_class}", (10, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)              
 
             return img
-    
+
+    st.subheader("📷 Realtime Camera Prediction")
+    # Placeholder para predicción de texto
+    pred_placeholder = st.empty()
+
+    # Forzar CSS para que el vídeo llene la columna izquierda
+    st.markdown(
+        """
+        <style>
+        video {
+            width: 100% !important;
+            height: auto !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     col1, col2 = st.columns([3, 1])  # columna izquierda más grande para vídeo
     with col1:
-        webrtc_streamer(
+        webrtc_ctx = webrtc_streamer(
             key="waste-demo",
             video_transformer_factory=VideoTransformer,
-            media_stream_constraints={"video": True, "audio": False},
+            media_stream_constraints={"video": {"width": 1280, "height": 720}, "audio": False},
         )
     with col2:
-        st.markdown("### Predicción en tiempo real")
-        if 'last_pred' in st.session_state:
-            st.write(f"**{st.session_state['last_pred']}**")
+        if webrtc_ctx.video_transformer:
+            pred_class = webrtc_ctx.video_transformer.pred_class
+            if pred_class:
+                pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_class}**")
+            else:
+                pred_placeholder.markdown("### Predicción en tiempo real\nEsperando...")
         else:
-            st.write("Esperando predicción...")
+            pred_placeholder.markdown("### Predicción en tiempo real\nEsperando cámara...")
+        
 
    
