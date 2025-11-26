@@ -87,31 +87,26 @@ else:
             return img
     
 
-    col1, col2 = st.columns([2, 1])  # columna izquierda más grande para vídeo
+    #col1, col2 = st.columns([2, 1])  # columna izquierda más grande para vídeo
     
-    with col1:
-        ctx = webrtc_streamer(
-            key="waste-demo",
-            video_transformer_factory=VideoTransformer,
-            media_stream_constraints={
-                "video": {
-                    "width": {'ideal':1280}, 
-                    "height": {'ideal':720}
-                    },
-                    "audio": False},
-            async_transform=True
-        )
-    with col2:
-        # Placeholders dentro de la columna 2
-        pred_placeholder = st.empty()
+    #with col1:
+    st.subheader("📷 Cámara en directo con predicción en tiempo real")
+    webrtc_streamer(
+        key="waste-demo",
+        video_transformer_factory=VideoTransformer,
+        media_stream_constraints={"video": {"width": 1280, "height": 720}, "audio": False},
+        async_transform=True
+    )
         
-        # Placeholder para predicción de texto
-        pred_placeholder = st.empty()
+   # with col2:
+        # Placeholders dentro de la columna 2
+        #pred_placeholder = st.empty()
+        
         #while True:
-        if ctx and ctx.video_transformer:
-            pred_cls = ctx.video_transformer.pred_class
-            pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
-        else:
-            pred_placeholder.markdown("Conectando…")
+        #if ctx.video_transformer:
+          #  pred_cls = ctx.video_transformer.pred_class
+           # pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
+        #else:
+          #  pred_placeholder.markdown("Conectando…")
            # time.sleep(0.1)
             
