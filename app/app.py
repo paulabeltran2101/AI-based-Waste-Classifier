@@ -69,7 +69,7 @@ else:
 
     # Detectar cámaras conectadas (prueba los primeros 5 índices)
     available_cameras = []
-    for i in range(5):
+    for i in range(10):
         cap_test = cv2.VideoCapture(i, cv2.CAP_DSHOW)
         
         if cap_test is not None and cap_test.isOpened():
