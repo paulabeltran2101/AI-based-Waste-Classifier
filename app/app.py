@@ -82,17 +82,26 @@ else:
                 pred_idx = svm_model.predict(features)[0]
                 pred_class = CLASS_NAMES[pred_idx]
 
-                cv2.putText(img, f"Predicted: {pred_class}", (10, 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                #cv2.putText(img, f"Predicted: {pred_class}", (10, 30),
+                 #           cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+                # Guardar última predicción en session_state
+                st.session_state['last_pred'] = pred_class
 
             return img
     
-    webrtc_streamer(
-        key="waste-demo",
-        video_transformer_factory=VideoTransformer,
-        media_stream_constraints={"video": True, "audio": False},
-    )
-    
-
+    col1, col2 = st.columns([3, 1])  # columna izquierda más grande para vídeo
+    with col1:
+        webrtc_streamer(
+            key="waste-demo",
+            video_transformer_factory=VideoTransformer,
+            media_stream_constraints={"video": True, "audio": False},
+        )
+    with col2:
+        st.markdown("### Predicción en tiempo real")
+        if 'last_pred' in st.session_state:
+            st.write(f"**{st.session_state['last_pred']}**")
+        else:
+            st.write("Esperando predicción...")
 
    
