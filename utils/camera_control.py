@@ -1,6 +1,6 @@
 import cv2
 from utils.image_flow import update_frame, get_frame_size, get_frame_info
-from utils.clasiffier import Classifier
+from utils.classifier import Classifier
 from numpy import expand_dims
 
 class WebCamReader():
