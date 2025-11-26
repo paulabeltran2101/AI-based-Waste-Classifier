@@ -69,10 +69,17 @@ else:
     # Detectar cámaras conectadas (prueba los primeros 5 índices)
     available_cameras = []
     for i in range(5):
-        cap_test = cv2.VideoCapture(i)
-        if cap_test.read()[0]:
-            available_cameras.append(i)
-        cap_test.release()
+        cap_test = cv2.VideoCapture(i, cv2.CAP_DSHOW)
+        
+        if cap_test is not None and cap_test.isOpened():
+            ret, frame = cap_test.read()
+            if ret:
+                available_cameras.append(i)
+        # Liberar solo si está abierta
+        try:
+            cap_test.release()
+        except:
+            pass
 
     if not available_cameras:
         st.error("No camera detected")
@@ -96,7 +103,8 @@ else:
 
             # Procesar solo cada N frames
             if frame_count % PROCESS_EVERY_N_FRAMES == 0:
-                features = extract_features_from_image(frame, conv_base)
+                frame_small = cv2.resize(frame, (380, 380))
+                features = extract_features_from_image(frame_small, conv_base)
                 pred_idx = svm_model.predict(features)[0]
                 pred_class = CLASS_NAMES[pred_idx]
 
@@ -108,7 +116,7 @@ else:
             stframe.image(frame, channels="BGR")
             # Actualizar el valor del checkbox fuera del bucle
             camera_running = st.session_state.camera_run_checkbox
-        
+            time.sleep(0.01)
 
     cap.release()
     st.warning("Camera stopped")
