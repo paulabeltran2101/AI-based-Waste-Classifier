@@ -75,13 +75,22 @@ else:
             #self.time_controller = time_control.FrameTimer()
             self.wc = WebCamReader(camera_index=1)
             #self.pred_class = None
+            self.components_started = False
 
         def transform(self, frame):
             #Convertir frame
+            print("Transform ejecutado")
             img = frame.to_ndarray(format="bgr24")
+            update_frame(img)
+
+            if not self.components_started:
+                print("Iniciando WebCamReader")
+                self.wc.start()
+                self.components_started = True
             
             #Actualizamos frame y obtenemos predicción
             processed = self.wc.update()
+            print("Update ejecutado, salida:", type(processed))
             
             return processed if processed is not None else img
     
