@@ -24,9 +24,9 @@ class Classifier():
     def predict(self, img, can_predict:bool):
         
         features = extract_features_from_image(img, self.conv)
-        prediccion = self.model.predict(features, verbose=0)
+        prediccion = self.model.predict(features)
 
-        char = CLASS_NAMES[np.argmax(prediccion)]
+        char = CLASS_NAMES[prediccion[0]]
         if can_predict:
             self.last_predictions.append(char)
         return char

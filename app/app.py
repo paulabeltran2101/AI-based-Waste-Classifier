@@ -97,7 +97,7 @@ else:
 
         frame_count += 1
         print(f"Frame {frame_count} mostrado")
-        time.sleep(0.03)  # ~30 FPS
+        time.sleep(0.1)  # ~30 FPS
 
     wc.release()
     
