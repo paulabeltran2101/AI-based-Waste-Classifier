@@ -5,7 +5,6 @@ import cv2
 import sys
 import os
 import time
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 
 # añade la carpeta raíz al PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -67,54 +66,38 @@ if mode == "Upload Image":
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
+    # --- Cámara en directo ---
+    #cam_index = st.number_input("Selecciona índice de cámara:", min_value=0, max_value=5, value=0, step=1)
+    wc = WebCamReader(camera_index=0)
+
+    # Layout: cámara a la izquierda, predicción a la derecha
+    col1, col2 = st.columns([3, 1])
+    frame_placeholder = col1.image([])
+    pred_placeholder = col2.empty()
+
+    run = st.checkbox("Iniciar cámara")
+
+    frame_count = 0
+
+    while run:
+        frame, pred = wc.read_frame()
+        if frame is None:
+            st.warning("No se pudo leer frame de la cámara.")
+            break
+
+        # Convertir BGR → RGB
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_placeholder.image(frame_rgb)
+
+        # Mostrar predicción en columna derecha
+        if pred:
+            pred_placeholder.markdown(f"### ♻️ Predicción:\n**{pred}**")
+        else:
+            pred_placeholder.markdown("Esperando predicción…")
+
+        frame_count += 1
+        print(f"Frame {frame_count} mostrado")
+        time.sleep(0.03)  # ~30 FPS
+
+    wc.release()
     
-    #Definición clase 
-    class VideoTransformer(VideoTransformerBase):
-
-        def __init__(self):
-            #self.time_controller = time_control.FrameTimer()
-            self.wc = WebCamReader(camera_index=1)
-            #self.pred_class = None
-            self.components_started = False
-
-        def transform(self, frame):
-            #Convertir frame
-            print("Transform ejecutado")
-            img = frame.to_ndarray(format="bgr24")
-            update_frame(img)
-
-            if not self.components_started:
-                print("Iniciando WebCamReader")
-                self.wc.start()
-                self.components_started = True
-            
-            #Actualizamos frame y obtenemos predicción
-            processed = self.wc.update()
-            print("Update ejecutado, salida:", type(processed))
-            
-            return processed if processed is not None else img
-    
-
-    #col1, col2 = st.columns([2, 1])  # columna izquierda más grande para vídeo
-    
-    #with col1:
-    st.subheader("📷 Cámara en directo con predicción en tiempo real")
-    webrtc_streamer(
-        key="waste-demo",
-        video_transformer_factory=VideoTransformer,
-        media_stream_constraints={"video": {"width": 1280, "height": 720}, "audio": False},
-        async_transform=True
-    )
-        
-   # with col2:
-        # Placeholders dentro de la columna 2
-        #pred_placeholder = st.empty()
-        
-        #while True:
-        #if ctx.video_transformer:
-          #  pred_cls = ctx.video_transformer.pred_class
-           # pred_placeholder.markdown(f"### Predicción en tiempo real\n**{pred_cls if pred_cls else 'Esperando predicción…'}**")
-        #else:
-          #  pred_placeholder.markdown("Conectando…")
-           # time.sleep(0.1)
-            
