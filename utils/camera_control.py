@@ -16,13 +16,15 @@ class WebCamReader():
         #captura frame
         ret, img = self.cap.read()
         if not ret:
+            print("No se pudo leer de la cámara")
             return None
         
         self.pred_class = self.model.predict(img, can_predict=True)
+        print("Predicción: ", self.pred_class)
 
         
-        cv2.putText(img, f"Predicted: {self.pred_class}", (10, 40),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
+        cv2.putText(img, f"Predicted: {self.pred_class}", (20, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2, cv2.LINE_AA)
 
         return img
 
