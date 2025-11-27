@@ -83,12 +83,7 @@ else:
             #Actualizamos frame y obtenemos predicción
             processed = self.wc.update()
             
-            if processed is not None:
-                processed = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
-                #processed = processed.astype("uint8")
-
-                return processed
-            return img
+            return processed if processed is not None else img
     
 
     #col1, col2 = st.columns([2, 1])  # columna izquierda más grande para vídeo
