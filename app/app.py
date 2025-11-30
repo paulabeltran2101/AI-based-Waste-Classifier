@@ -30,7 +30,7 @@ page_bg = """
     }
 
     h1 {
-    font-size: 46px !important;
+    font-size: 65px !important;
     font-weight: 900 !important;
     text-align: center !important;
     color: white !important;
@@ -91,13 +91,13 @@ page_bg = """
 
     /* Texto dentro del uploader */
     .stFileUploader label, .stFileUploader div, .stFileUploader span {
-        color: white !important;
+        color: #0A1A2F !important;
     }
 
     /* Botón de seleccionador */
     .stFileUploader > div > button {
         background-color: rgba(255, 255, 255, 0.20) !important;
-        color: white !important;
+        color: #0A1A2F !important;
         border: 1px solid rgba(255,255,255,0.25) !important;
     }
 </style>
