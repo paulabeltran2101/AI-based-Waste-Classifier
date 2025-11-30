@@ -81,6 +81,25 @@ page_bg = """
         margin-bottom: 10px;
         text-align: center;
     }
+      
+        /* Caja del file uploader */
+    .stFileUploader {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    /* Texto dentro del uploader */
+    .stFileUploader label, .stFileUploader div, .stFileUploader span {
+        color: white !important;
+    }
+
+    /* Botón de seleccionador */
+    .stFileUploader > div > button {
+        background-color: rgba(255, 255, 255, 0.20) !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.25) !important;
+    }
 </style>
 
 <!-- Barra superior -->
@@ -102,12 +121,20 @@ st.markdown("<h1>🔍 Live AI-based Waste Classifier ♻️</h1>", unsafe_allow_
 # Descripción del proyecto
 
 st.markdown("""
+<div class="desc-text" style="margin-bottom:15px;">
+An automated waste classification system using computer vision and machine learning.
+</div>
+""", unsafe_allow_html=True)
+st.write("")
+st.markdown("""
 <div class="desc-text">
-Un sistema de clasificación automática de residuos mediante visión artificial y aprendizaje automático.  
-🔗 <a href="https://github.com/paulabeltran2101" target="_blank" style="color:white; text-decoration:underline;">GitHub Repository</a>
+🔗 <a href="https://github.com/paulabeltran2101" target="_blank" style="color:white; text-decoration:underline;">
+GitHub Repository
+</a>
 </div>
 """, unsafe_allow_html=True)
 
+st.write("")
 st.write("👉 Select an input mode and get real-time waste classification.")
 
 # -------------------------------
