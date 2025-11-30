@@ -16,8 +16,52 @@ from utils.image_flow import get_frame_info, update_frame
 from utils.camera_control import WebCamReader
 from utils import time_control
 
-st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
+page_bg = """
+<style>
+/* fondo completo */
+.stApp {
+    background-image: url("https://images.unsplash.com/photo-XXXXXXXXXXXX?auto=format&fit=crop&w=1350&q=80");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* texto blanco */
+html, body, [class*="css"] {
+    color: white !important;
+}
+
+/* títulos centrados */
+h1, h2, h3, h4 {
+    text-align: center;
+    color: white !important;
+}
+
+/* centrar todo el contenido */
+.main > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+</style>
+"""
+
+st.markdown(page_bg, unsafe_allow_html=True)
+
+
+st.set_page_config(page_title="♻️Waste Classifier", layout="centered")
 st.title("🔍 Live AI-based Waste Classifier ♻️")
+
+# Descripción del proyecto
+st.markdown(
+    """
+### Un sistema de clasificación automática de residuos mediante visión artificial y aprendizaje automático.  
+Este proyecto identifica tipos de basura en tiempo real usando un modelo CNN + SVM optimizado.
+
+🔗 Repositorio: [Mi GitHub](https://github.com/paulabeltran2101)
+"""
+)
+
 st.write("Select an input mode and get real-time waste classification.")
 
 # -------------------------------
@@ -75,7 +119,7 @@ else:
     frame_placeholder = col1.image([])
     pred_placeholder = col2.empty()
 
-    run = st.checkbox("Iniciar cámara")
+    run = st.checkbox("Iniciar cámara📸")
 
     frame_count = 0
 
@@ -91,9 +135,9 @@ else:
 
         # Mostrar predicción en columna derecha
         if pred:
-            pred_placeholder.markdown(f"### ♻️ Predicción:\n**{pred}**")
+            pred_placeholder.markdown(f"### 📌 Predicción:\n**{pred}**")
         else:
-            pred_placeholder.markdown("Esperando predicción…")
+            pred_placeholder.markdown("Esperando predicción…⏳")
 
         frame_count += 1
         print(f"Frame {frame_count} mostrado")
