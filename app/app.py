@@ -17,38 +17,90 @@ from utils.camera_control import WebCamReader
 
 page_bg = """
 <style>
-/* fondo completo */
-.stApp {
-    background-image: url("https://images.unsplash.com/photo-XXXXXXXXXXXX?auto=format&fit=crop&w=1350&q=80");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-}
 
-/* texto blanco */
-html, body, [class*="css"] {
-    color: white !important;
-}
+    /* ====== FONDO GENERAL ====== */
+    .stApp {
+        background-color: #0A1A2F !important;
+        color: white !important;
+    }
 
-/* títulos centrados */
-h1, h2, h3, h4 {
-    text-align: center;
-    color: white !important;
-}
+    /* ====== TEXTO BLANCO ====== */
+    html, body, [class*="css"], p, label, span, div, h1, h2, h3, h4 {
+        color: white !important;
+    }
 
-/* centrar todo el contenido */
-.main > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    /* ====== TÍTULOS CENTRADOS ====== */
+    h1, h2, h3 {
+        text-align: center !important;
+        color: white !important;
+    }
+
+    /* ====== HEADER TRANSPARENTE ====== */
+    .header-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.08); /* transparencia suave */
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .header-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: white;
+        letter-spacing: 1px;
+    }
+
+    /* ====== CARDS ====== */
+    .card {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.25);
+        margin-top: 20px;
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .card h3 {
+        margin-top: 0;
+        text-align: center;
+        color: white;
+    }
+
+    /* ====== INPUTS OSCUROS ====== */
+    input, textarea {
+        background-color: #112233 !important;
+        color: white !important;
+    }
+
+    /* ====== RADIO, CHECKBOX, ETC ====== */
+    .stRadio div, .stCheckbox span {
+        color: white !important;
+    }
+
 </style>
+
+<!-- Barra superior -->
+<div class="header-bar">
+    <div class="header-title">♻️ Waste Classifier – Live AI</div>
+</div>
+
+<!-- Espacio para que el contenido no tape el header -->
+<div style="margin-top: 90px;"></div>
+
 """
 
 st.markdown(page_bg, unsafe_allow_html=True)
 
 
-st.set_page_config(page_title="♻️Waste Classifier", layout="centered")
+st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
 st.title("🔍 Live AI-based Waste Classifier ♻️")
 
 # Descripción del proyecto
@@ -82,14 +134,20 @@ CLASS_NAMES = [
 # ======================================
 # Selección de modo
 # ======================================
-mode = st.radio("Select mode:", ("Upload Image", "Realtime Camera"))
 
+st.markdown('<div class="card">', unsafe_allow_html=True)
+mode = st.radio("Select mode:", ("Upload Image", "Realtime Camera"))
+st.markdown('</div>', unsafe_allow_html=True)
 # ======================================
 # Modo 1: Subir imagen
 # ======================================
 if mode == "Upload Image":
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📤 Upload an Image")
     uploaded_file = st.file_uploader("Select an image", type=["jpg", "jpeg", "png"])
-    
+    st.markdown('</div>', unsafe_allow_html=True)
+
     if uploaded_file is not None:
         file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
         img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
@@ -109,6 +167,9 @@ if mode == "Upload Image":
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
+
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("📸 Realtime Camera")
     # --- Cámara en directo ---
     #cam_index = st.number_input("Selecciona índice de cámara:", min_value=0, max_value=5, value=0, step=1)
     wc = WebCamReader(camera_index=0)
@@ -119,7 +180,8 @@ else:
     pred_placeholder = col2.empty()
 
     run = st.checkbox("Iniciar cámara📸")
-
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     frame_count = 0
 
     while run:
