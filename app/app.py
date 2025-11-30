@@ -74,7 +74,7 @@ page_bg = """
 
     .subheader-box {
         background: rgba(255, 255, 255, 0.20);
-        padding: 18px 25px;
+        padding: 15px 20px;
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.25);
         margin-top: 25px;
@@ -135,7 +135,6 @@ GitHub Repository
 """, unsafe_allow_html=True)
 
 st.write("")
-st.write("👉 Select an input mode and get real-time waste classification.")
 
 # -------------------------------
 # Load models
@@ -158,7 +157,7 @@ CLASS_NAMES = [
 # ======================================
 
 st.markdown('<div class="card">', unsafe_allow_html=True)
-mode = st.radio("Select mode:", ("Upload Image", "Realtime Camera"))
+mode = st.radio("👉 Select an input mode and get real-time waste classification:", ("Upload Image", "Realtime Camera"))
 st.markdown('</div>', unsafe_allow_html=True)
 # ======================================
 # Modo 1: Subir imagen
