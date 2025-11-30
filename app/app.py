@@ -29,8 +29,19 @@ page_bg = """
         color: white !important;
     }
 
+    h1 {
+    font-size: 46px !important;
+    font-weight: 900 !important;
+    }
+    .desc-text {
+    font-size: 20px !important;
+    text-align: center;
+    color: white;
+    opacity: 0.85;
+    }
+
     /* ====== TÍTULOS CENTRADOS ====== */
-    h1, h2, h3 {
+    h2, h3 {
         text-align: center !important;
         color: white !important;
     }
@@ -65,24 +76,7 @@ page_bg = """
         border-radius: 16px;
         box-shadow: 0px 4px 20px rgba(0,0,0,0.25);
         margin-top: 20px;
-        border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .card h3 {
-        margin-top: 0;
-        text-align: center;
-        color: white;
-    }
-
-    /* ====== INPUTS OSCUROS ====== */
-    input, textarea {
-        background-color: #112233 !important;
-        color: white !important;
-    }
-
-    /* ====== RADIO, CHECKBOX, ETC ====== */
-    .stRadio div, .stCheckbox span {
-        color: white !important;
+        border: 1px solid rgba(255,255,255,0.10);
     }
 
 </style>
@@ -101,17 +95,16 @@ st.markdown(page_bg, unsafe_allow_html=True)
 
 
 st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
-st.title("🔍 Live AI-based Waste Classifier ♻️")
+st.markdown("<h1>🔍 Live AI-based Waste Classifier ♻️</h1>", unsafe_allow_html=True)
 
 # Descripción del proyecto
-st.markdown(
-    """
-### Un sistema de clasificación automática de residuos mediante visión artificial y aprendizaje automático.  
-Este proyecto identifica tipos de basura en tiempo real usando un modelo CNN + SVM optimizado.
 
+st.markdown("""
+<div class="desc-text">
+Un sistema de clasificación automática de residuos mediante visión artificial y aprendizaje automático.  
 🔗 Repositorio: [Mi GitHub](https://github.com/paulabeltran2101)
-"""
-)
+</div>
+""", unsafe_allow_html=True)
 
 st.write("Select an input mode and get real-time waste classification.")
 
@@ -181,7 +174,7 @@ else:
 
     run = st.checkbox("Iniciar cámara📸")
     st.markdown('</div>', unsafe_allow_html=True)
-    
+
     frame_count = 0
 
     while run:
