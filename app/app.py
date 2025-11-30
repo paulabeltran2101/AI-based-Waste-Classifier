@@ -72,16 +72,15 @@ page_bg = """
         letter-spacing: 1px;
     }
 
-    /* ====== CARDS ====== */
-    .card {
-        background: rgba(255, 255, 255, 0.08);
-        padding: 25px;
-        border-radius: 16px;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.25);
-        margin-top: 20px;
-        border: 1px solid rgba(255,255,255,0.10);
+    .subheader-box {
+        background: rgba(255, 255, 255, 0.20);
+        padding: 18px 25px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        margin-top: 25px;
+        margin-bottom: 10px;
+        text-align: center;
     }
-
 </style>
 
 <!-- Barra superior -->
@@ -105,7 +104,7 @@ st.markdown("<h1>🔍 Live AI-based Waste Classifier ♻️</h1>", unsafe_allow_
 st.markdown("""
 <div class="desc-text">
 Un sistema de clasificación automática de residuos mediante visión artificial y aprendizaje automático.  
-🔗 Repositorio: [Mi GitHub](https://github.com/paulabeltran2101)
+🔗 <a href="https://github.com/paulabeltran2101" target="_blank" style="color:white; text-decoration:underline;">GitHub Repository</a>
 </div>
 """, unsafe_allow_html=True)
 
@@ -139,8 +138,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 # ======================================
 if mode == "Upload Image":
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📤 Upload an Image")
+    st.markdown('<div class="subheader-box"><h3>📤 Upload an Image</h3></div>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Select an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
@@ -152,21 +150,26 @@ if mode == "Upload Image":
         pred_idx = svm_model.predict(features)[0]
         pred_class = CLASS_NAMES[pred_idx]
 
+        # Mostrar predicción arriba en texto
+        st.markdown(f"""
+        <div style="text-align:center; font-size:24px; font-weight:600;">
+        📌 Prediction: <span style="color:#4CC9F0;">{pred_class}</span>
+        </div>
+        """, unsafe_allow_html=True)
         # Dibujar resultado
         cv2.putText(img, f"Waste type: {pred_class}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-        st.image(img, channels="BGR", caption=f"Predicted class: {pred_class}")
+        st.image(img, channels="BGR")
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    
 
 # ======================================
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
 
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("📸 Realtime Camera")
+    st.markdown('<div class="subheader-box"><h3>📸 Realtime Camera</h3></div>', unsafe_allow_html=True)
     # --- Cámara en directo ---
     #cam_index = st.number_input("Selecciona índice de cámara:", min_value=0, max_value=5, value=0, step=1)
     wc = WebCamReader(camera_index=0)
@@ -201,5 +204,4 @@ else:
         time.sleep(0.1)  # ~30 FPS
 
     wc.release()
-    st.markdown('</div>', unsafe_allow_html=True)
 
