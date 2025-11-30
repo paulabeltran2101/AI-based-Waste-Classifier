@@ -32,7 +32,10 @@ page_bg = """
     h1 {
     font-size: 46px !important;
     font-weight: 900 !important;
-    }
+    text-align: center !important;
+    color: white !important;
+        }
+
     .desc-text {
     font-size: 20px !important;
     text-align: center;
@@ -41,7 +44,7 @@ page_bg = """
     }
 
     /* ====== TÍTULOS CENTRADOS ====== */
-    h2, h3 {
+    h1, h2, h3 {
         text-align: center !important;
         color: white !important;
     }
@@ -106,7 +109,7 @@ Un sistema de clasificación automática de residuos mediante visión artificial
 </div>
 """, unsafe_allow_html=True)
 
-st.write("Select an input mode and get real-time waste classification.")
+st.write("👉 Select an input mode and get real-time waste classification.")
 
 # -------------------------------
 # Load models
@@ -139,7 +142,6 @@ if mode == "Upload Image":
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.subheader("📤 Upload an Image")
     uploaded_file = st.file_uploader("Select an image", type=["jpg", "jpeg", "png"])
-    st.markdown('</div>', unsafe_allow_html=True)
 
     if uploaded_file is not None:
         file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
@@ -155,6 +157,8 @@ if mode == "Upload Image":
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         st.image(img, channels="BGR", caption=f"Predicted class: {pred_class}")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ======================================
 # Modo 2: Cámara en tiempo real
@@ -173,7 +177,6 @@ else:
     pred_placeholder = col2.empty()
 
     run = st.checkbox("Iniciar cámara📸")
-    st.markdown('</div>', unsafe_allow_html=True)
 
     frame_count = 0
 
@@ -198,4 +201,5 @@ else:
         time.sleep(0.1)  # ~30 FPS
 
     wc.release()
-    
+    st.markdown('</div>', unsafe_allow_html=True)
+
