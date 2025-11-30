@@ -14,7 +14,6 @@ from utils.feature_extractor import load_conv_base, extract_features_from_image
 from utils.load_model import load_model
 from utils.image_flow import get_frame_info, update_frame
 from utils.camera_control import WebCamReader
-from utils import time_control
 
 page_bg = """
 <style>
