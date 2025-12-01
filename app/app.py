@@ -161,9 +161,11 @@ st.write("")
 
 st.markdown("""
 <style>
-div.row-widget.stRadio > div {
-    font-size: 20px;      /* tamaño del texto */
-}
+    .stRadio label {
+        font-size: 22px !important;
+        font-weight: 500;
+        color: white !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
