@@ -30,14 +30,14 @@ page_bg = """
     }
 
     h1 {
-    font-size: 80px !important;
+    font-size: 75px !important;
     font-weight: 900 !important;
     text-align: center !important;
     color: white !important;
         }
 
     .desc-text {
-    font-size: 30px !important;
+    font-size: 20px !important;
     text-align: center;
     color: white;
     opacity: 0.85;
@@ -56,8 +56,8 @@ page_bg = """
         left: 0;
         width: 100%;
         height: 60px;
-        background: rgba(135, 206, 250, 0.15); /* transparencia suave */
-        backdrop-filter: blur(8px);
+        background: rgba(135, 206, 250, 0.5); /* transparencia suave */
+        backdrop-filter: none;
         border-bottom: 1px solid rgba(255,255,255,0.15);
         display: flex;
         align-items: center;
@@ -75,12 +75,11 @@ page_bg = """
     .subheader-box {
         background: rgba(255, 255, 255, 0.20);
         padding: 10px 15px;
-        border-radius: 12px;
+        border-radius: 18px;
         border: 1px solid rgba(255, 255, 255, 0.25);
         margin-top: 25px;
         margin-bottom: 10px;
         text-align: center;
-        width: fit-content; /* se ajusta al contenido */
         margin-left: auto;
         margin-right: auto;
     }
@@ -158,10 +157,9 @@ CLASS_NAMES = [
 # ======================================
 # Selección de modo
 # ======================================
+st.markdown("#### 👉 Select an input mode and get real-time waste classification:")
 
-st.markdown('<div class="card">', unsafe_allow_html=True)
-mode = st.radio("👉 Select an input mode and get real-time waste classification:", ("Upload Image", "Realtime Camera"))
-st.markdown('</div>', unsafe_allow_html=True)
+mode = st.radio("", ("Upload Image", "Realtime Camera"))
 # ======================================
 # Modo 1: Subir imagen
 # ======================================
