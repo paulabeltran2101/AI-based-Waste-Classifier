@@ -30,14 +30,14 @@ page_bg = """
     }
 
     h1 {
-    font-size: 75px !important;
+    font-size: 65px !important;
     font-weight: 900 !important;
     text-align: center !important;
     color: white !important;
         }
 
     .desc-text {
-    font-size: 20px !important;
+    font-size: 22px !important;
     text-align: center;
     color: white;
     opacity: 0.85;
@@ -56,7 +56,7 @@ page_bg = """
         left: 0;
         width: 100%;
         height: 60px;
-        background: rgba(135, 206, 250, 0.5); /* transparencia suave */
+        background: rgba(200, 230, 255, 0.40); /* transparencia suave */
         backdrop-filter: none;
         border-bottom: 1px solid rgba(255,255,255,0.15);
         display: flex;
@@ -73,16 +73,16 @@ page_bg = """
     }
 
     .subheader-box {
-        background: rgba(255, 255, 255, 0.20);
-        padding: 10px 15px;
-        border-radius: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        margin-top: 25px;
-        margin-bottom: 10px;
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    background: transparent;
+    color: #4CC9F0;
+    padding: 10px 20px;
+    border-top: 2px solid #4CC9F0;  
+    border-bottom: 2px solid #4CC9F0;
+    text-align: center;
+    margin: 20px auto;
+    font-weight: bold;
+    font-size: 20px;
+}
       
         /* Caja del file uploader */
     .stFileUploader {
@@ -118,21 +118,24 @@ st.markdown(page_bg, unsafe_allow_html=True)
 
 
 st.set_page_config(page_title="♻️Waste Classifier", layout="wide")
-st.markdown("<h1>🔍 Live AI-based Waste Classifier ♻️</h1>", unsafe_allow_html=True)
-
-# Descripción del proyecto
 
 st.markdown("""
-<div class="desc-text" style="margin-bottom:15px;">
-An automatic and intelligent classification system based on Computer Vision and hybrid approach combining Machine Learning and Deep Learning.
-</div>
-""", unsafe_allow_html=True)
-st.write("")
-st.markdown("""
-<div class="desc-text">
-🔗 <a href="https://github.com/paulabeltran2101" target="_blank" style="color:white; text-decoration:underline;">
-GitHub Repository
-</a>
+<div style="
+    background-color: rgba(135, 206, 250, 0.5);  /* azul clarito con transparencia */
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+">
+    <h1 style="margin-bottom:15px;">🔍 Live AI-based Waste Classifier ♻️</h1>
+    <div style="font-size:22px; opacity:0.9; margin-bottom:15px;">
+        An automatic and intelligent classification system based on Computer Vision and hybrid approach combining Machine Learning and Deep Learning.
+    </div>
+    <div style="font-size:20px; opacity:0.9;">
+        🔗 <a href="https://github.com/paulabeltran2101" target="_blank" style="color:white; text-decoration:underline;">
+        GitHub Repository
+        </a>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -159,17 +162,76 @@ CLASS_NAMES = [
 # ======================================
 st.write("")
 
+# Cargar la imagen local
+img = Image.open("images/grid_clases.png")
+
+# Crear columnas con st.columns
+col1, col2 = st.columns([1,1])
+
+# Columna 1: imagen
+with col1:
+    st.image(img, width=600, use_container_width=False)
+
+# Columna 2: tips dentro de un recuadro
+with col2:
+    st.markdown("""
+    <div style="
+        display:flex;
+        flex-direction:column;
+        justify-content:center;  /* centra verticalmente */
+        height:100%;             /* ocupa toda la altura de la columna */
+        background: rgba(200, 230, 255, 0.40);
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        margin-top:200px;
+    ">
+        <h3>💡 Tips for best results</h3>
+        <ul style="font-size:18px; list-style:none; padding-left:0; margin:0;">
+            <li>✅ Use well-lit images</li>
+            <li>✅ Ensure the waste is clearly visible</li>
+            <li>✅ Try one item at a time</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("""
+<div style="
+    display:flex;
+    align-items:center;
+    margin:40px 0 15px;
+">
+    <div style="flex:1; height:2px; background:rgba(255,255,255,0.3);"></div>
+    <div style="padding:0 15px; font-size:20px;">👉 Select an input mode and get real-time waste classification:</div>
+    <div style="flex:1; height:2px; background:rgba(255,255,255,0.3);"></div>
+</div>
+""", unsafe_allow_html=True)
+
+
+# Columnas: la primera columna es el margen
+col1, col2 = st.columns([1, 20])  # ajusta [1,3] o [1,4] según lo quieras desplazado
+
+with col2:
+    mode = st.radio("", ("Upload Image", "Realtime Camera"))
+
 st.markdown("""
 <style>
-    .stRadio label {
-        font-size: 22px !important;
-        font-weight: 500;
-        color: white !important;
+
+    /* Cambiar tamaño y color de las opciones del radio */
+    .stRadio > div[role="radiogroup"] > label > div:nth-child(2) > p {
+    font-size: 26px !important;
+    font-weight: 600 !important;
+    color: white !important;
     }
+
+    /* Espacio entre opciones */
+    div[role="radiogroup"] {
+        gap: 5px !important;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
-mode = st.radio("👉 Select an input mode and get real-time waste classification:", ("Upload Image", "Realtime Camera"))
 # ======================================
 # Modo 1: Subir imagen
 # ======================================
@@ -205,7 +267,6 @@ if mode == "Upload Image":
 # Modo 2: Cámara en tiempo real
 # ======================================
 else:
-
     st.markdown('<div class="subheader-box"><h3>📸 Realtime Camera</h3></div>', unsafe_allow_html=True)
     # --- Cámara en directo ---
     #cam_index = st.number_input("Selecciona índice de cámara:", min_value=0, max_value=5, value=0, step=1)
