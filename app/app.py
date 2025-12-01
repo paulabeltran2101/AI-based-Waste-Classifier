@@ -157,9 +157,17 @@ CLASS_NAMES = [
 # ======================================
 # Selección de modo
 # ======================================
-st.markdown("#### 👉 Select an input mode and get real-time waste classification:")
+st.write("")
 
-mode = st.radio("", ("Upload Image", "Realtime Camera"))
+st.markdown("""
+<style>
+div.row-widget.stRadio > div {
+    font-size: 20px;      /* tamaño del texto */
+}
+</style>
+""", unsafe_allow_html=True)
+
+mode = st.radio("👉 Select an input mode and get real-time waste classification:", ("Upload Image", "Realtime Camera"))
 # ======================================
 # Modo 1: Subir imagen
 # ======================================
