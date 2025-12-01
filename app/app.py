@@ -30,14 +30,14 @@ page_bg = """
     }
 
     h1 {
-    font-size: 65px !important;
+    font-size: 80px !important;
     font-weight: 900 !important;
     text-align: center !important;
     color: white !important;
         }
 
     .desc-text {
-    font-size: 20px !important;
+    font-size: 30px !important;
     text-align: center;
     color: white;
     opacity: 0.85;
@@ -55,8 +55,8 @@ page_bg = """
         top: 0;
         left: 0;
         width: 100%;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.08); /* transparencia suave */
+        height: 60px;
+        background: rgba(135, 206, 250, 0.15); /* transparencia suave */
         backdrop-filter: blur(8px);
         border-bottom: 1px solid rgba(255,255,255,0.15);
         display: flex;
@@ -74,12 +74,15 @@ page_bg = """
 
     .subheader-box {
         background: rgba(255, 255, 255, 0.20);
-        padding: 15px 20px;
+        padding: 10px 15px;
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.25);
         margin-top: 25px;
         margin-bottom: 10px;
         text-align: center;
+        width: fit-content; /* se ajusta al contenido */
+        margin-left: auto;
+        margin-right: auto;
     }
       
         /* Caja del file uploader */
@@ -108,7 +111,7 @@ page_bg = """
 </div>
 
 <!-- Espacio para que el contenido no tape el header -->
-<div style="margin-top: 90px;"></div>
+<div style="margin-top: 80px;"></div>
 
 """
 
@@ -122,7 +125,7 @@ st.markdown("<h1>🔍 Live AI-based Waste Classifier ♻️</h1>", unsafe_allow_
 
 st.markdown("""
 <div class="desc-text" style="margin-bottom:15px;">
-An automated waste classification system using computer vision and machine learning.
+An automatic and intelligent classification system based on Computer Vision and hybrid approach combining Machine Learning and Deep Learning.
 </div>
 """, unsafe_allow_html=True)
 st.write("")
