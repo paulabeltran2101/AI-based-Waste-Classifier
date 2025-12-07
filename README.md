@@ -81,7 +81,7 @@ El proyecto fue desarrollado en Python, utilizando las siguientes herramientas p
 
 ---
 
-### ⚙️ Instalación y ejecución de la aplicación
+## ⚙️ Instalación y ejecución de la aplicación
 
 1. **Clonar el repositorio**
 
