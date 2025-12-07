@@ -273,7 +273,7 @@ else:
     wc = WebCamReader(camera_index=0)
 
     # Layout: cámara a la izquierda, predicción a la derecha
-    col1, col2 = st.columns([3, 1])
+    col1, col2 = st.columns([2, 1])
     frame_placeholder = col1.image([])
     pred_placeholder = col2.empty()
 
@@ -293,7 +293,13 @@ else:
 
         # Mostrar predicción en columna derecha
         if pred:
-            pred_placeholder.markdown(f"### 📌 Predicción:\n**{pred}**")
+            pred_placeholder.markdown(f"""
+                <div style="text-align:center; margin-top:30px;">
+                    <h3>📌 Predicción:</h3>
+                    <p style="font-size: 24px;"><b>{pred}</b></p>
+                </div>
+                """,
+                unsafe_allow_html=True)
         else:
             pred_placeholder.markdown("Esperando predicción…⏳")
 
