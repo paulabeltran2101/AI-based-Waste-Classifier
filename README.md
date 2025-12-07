@@ -48,8 +48,63 @@ El proyecto fue desarrollado en Python, utilizando las siguientes herramientas p
 
 ## 📁 Estructura del Repositorio
 
+```plaintext
+📁 Proyecto-prediccion-fallos-maquinas
+│
+├── app/
+│ └── app.py # Aplicación Streamlit
+│
+├── model/
+│ └── best_norm&model_svm.pkl # Modelo SVM entrenado y testeado
+│
+├── data/ #Archivo UCI
+│
+├── images/
+│ └── grid_clases.jpg # clases
+│
+├── notebooks/
+│ └── FEATURES & MODEL.ipynb # Notebook del preprocesamiento, feature y entrenamiento
+│ └── EDA.ipynb # Notebook de la parte de EDA
+│
+├── utils/
+│ └── __init__.py # Inicialización
+│ └── camera_control.py # Inicialización cámara
+│ └── classifier.py # Predicción
+│ └── feature_extractor.py # Feature Extractor
+│ └── image_flow.py # Estado cámara
+│ └── load_model.py # Carga de modelo
+|
+├── test_cam.py #test de cámara
+├── requirements.txt # Dependencias del proyecto
+└── README.md # Este archivo
+```
 
+---
 
+### ⚙️ Instalación y ejecución de la aplicación
+
+1. **Clonar el repositorio**
+
+   ```bash
+   git clone https://github.com/paulabeltran2101/AI-based-Waste-Classifier.git
+   cd AI-based-Waste-Classifier
+
+2. **Crear entorno virtual**
+   ```bash
+   python -m venv env
+   .\env\Scripts\activate      # En Windows
+   source env/bin/activate     # En macOS / Linux
+
+3. **Instalar dependencias**
+   ```bash
+   pip install -r requirements.txt 
+   ```
+
+4. **Ejecutar la app**
+   ```bash
+   streamlit run app/app.py
+   ```
+   
 ---
 
 ## 🚀 Mejoras Futuras
@@ -61,24 +116,3 @@ Las principales líneas de trabajo para la escalabilidad e industrialización de
 3.  **Optimización del *Feature Extractor*:** Refinar la extracción de características para potenciar aún más las métricas obtenidas con los modelos clásicos de ML.
 4.  **Integración de *Edge AI***: Implementar el modelo en hardware dedicado (*edge devices*) para una **reducción de latencia** crítica en entornos industriales.
 
----
-
-## 🛠️ Cómo Ejecutar el Proyecto
-
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone [URL_DEL_REPOSITORIO]
-    cd AI-based-Waste-Classifier
-    ```
-
-2.  **Instalar dependencias:**
-    ```bash
-    pip install -r requirements.txt 
-    # Asegúrate de incluir tensorflow, keras, scikit-learn y opencv-python.
-    ```
-
-3.  **Ejecutar el Notebook:**
-    * Abre el archivo `X.ipynb` en tu entorno (Jupyter/Colab).
-    * Sigue las instrucciones dentro del notebook. Las celdas finales contendrán las funciones para:
-        * **Clasificación Estática:** Proporcionar la ruta de una imagen.
-        * **Clasificación en Tiempo Real:** Inicializar la captura desde la cámara (requiere que la cámara esté disponible y que la librería OpenCV funcione correctamente).
