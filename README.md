@@ -1,4 +1,4 @@
-# ♻️ Clasificación Inteligente de Residuos Industriales (ML + DL)
+# ♻️ Clasificación Inteligente de Residuos Industriales
 
 Este proyecto desarrolla e implementa un sistema avanzado para la **clasificación automática de residuos industriales sólidos**. El objetivo es ofrecer una **solución de visión artificial robusta** capaz de trabajar en dos modos:
 
