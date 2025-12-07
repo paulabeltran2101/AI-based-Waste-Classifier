@@ -1,6 +1,6 @@
 # ♻️ Clasificación Inteligente de Residuos Industriales
 
-Este proyecto desarrolla e implementa un sistema avanzado para la **clasificación automática de residuos industriales sólidos**. El objetivo es ofrecer una **solución de visión artificial robusta** capaz de trabajar en dos modos:
+Este proyecto desarrolla e implementa un sistema avanzado para la **clasificación automática de residuos industriales sólidos**. El objetivo es ofrecer una **solución de visión artificial robusta** capaz de trabajar en dos modos ([Link Streamlit](https://aiwaste-classifier.streamlit.app/)):
 
 1.  **Clasificación en *Batch*:** A partir de un conjunto de imágenes estáticas.
 2.  **Clasificación en Tiempo Real:** Utilizando la entrada de vídeo de una **cámara industrial o web** para la segregación instantánea de residuos.
